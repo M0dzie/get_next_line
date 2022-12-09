@@ -6,7 +6,7 @@
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 18:09:42 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/09 12:57:46 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/09 14:44:55 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,7 @@ char	*gnl_free_join(char *stash, char *buffer)
 	char	*next;
 
 	next = gnl_strjoin(stash, buffer);
-	free(stash);
-	return (next);
+	return (free(stash), next);
 }
 
 char	*gnl_read_line(int fd, char *stash)
@@ -74,7 +73,7 @@ char	*gnl_read_line(int fd, char *stash)
 
 	if (!stash)
 		stash = malloc(1);
-	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
 	i_read = 1;
@@ -82,17 +81,13 @@ char	*gnl_read_line(int fd, char *stash)
 	{
 		i_read = read(fd, buffer, BUFFER_SIZE);
 		if (i_read < 0)
-		{
-			free(buffer);
-			return (NULL);
-		}
+			return (free(buffer), NULL);
 		buffer[i_read] = '\0';
 		stash = gnl_free_join(stash, buffer);
 		if (gnl_strchr(buffer, '\n') == 1)
-			return (stash);
+			return (free(buffer), stash);
 	}
-	free(buffer);
-	return (stash);
+	return (free(buffer), stash);
 }
 
 char	*gnl_line(char *stash)
@@ -105,7 +100,7 @@ char	*gnl_line(char *stash)
 	i = 0;
 	while (stash[len] && stash[len] != '\n')
 		len++;
-	line = malloc(sizeof(char) * len + 1);
+	line = malloc(sizeof(char) * (len + 1));
 	while (len - i > 0)
 	{
 		line[i] = stash[i];
@@ -129,17 +124,17 @@ char	*gnl_next(char *stash)
 		i++;
 	if (stash[i] == '\0')
 		return (free(stash), NULL);
-	next_line = malloc(sizeof(char) * (ft_strlen(stash) - i) + 1);
+	next_line = malloc(sizeof(char) * ((ft_strlen(stash) - i) + 1));
 	if (!next_line)
 		return (NULL);
+	i++;
 	while (stash[i + j])
 	{
 		next_line[j] = stash[i + j];
 		j++;
 	}
 	next_line[j] = '\0';
-	free(stash);
-	return (next_line);
+	return (free(stash), next_line);
 }
 
 /**
@@ -167,7 +162,11 @@ char	*get_next_line(int fd)
 int	main(void)
 {
 	int fd = open("file_test", O_RDONLY);
+	printf("\nNew function :\n");
 	printf("real : %s\n", get_next_line(fd));
+	printf("\nNew function :\n");
+	printf("real : %s\n", get_next_line(fd));
+	printf("\nNew function :\n");
 	printf("real : %s\n", get_next_line(fd));
 	return (0);
 }
