@@ -6,12 +6,11 @@
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 18:09:42 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/08 18:47:20 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/09 12:57:46 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#define BUFFER_SIZE 10
 #include <fcntl.h>
 #include <stdio.h>
 
@@ -36,26 +35,111 @@ int	gnl_strchr(const char *s, char c)
 			return (1);
 		i++;
 	}
-	if (s[i] == '\0')
-		return (1);
 	return (0);
 }
 
-char	*gnl_strcpy(const char *src)
+char	*gnl_strjoin(char *stash, char *buffer)
 {
 	size_t	i;
-	char	*dst;
+	size_t	j;
+	char	*join;
 
 	i = 0;
-	dst = malloc(sizeof(char) * ft_strlen(src) + 1);
-	if (!dst)
+	j = 0;
+	join = malloc(sizeof(char) * ((ft_strlen(stash) + ft_strlen(buffer)) + 1));
+	if (!join)
 		return (NULL);
-	while (src[i])
+	while (stash[i])
+		join[i++] = stash[j++];
+	j = 0;
+	while (buffer[j])
+		join[i++] = buffer[j++];
+	join[i] = '\0';
+	return (join);
+}
+
+char	*gnl_free_join(char *stash, char *buffer)
+{
+	char	*next;
+
+	next = gnl_strjoin(stash, buffer);
+	free(stash);
+	return (next);
+}
+
+char	*gnl_read_line(int fd, char *stash)
+{
+	char	*buffer;
+	int		i_read;
+
+	if (!stash)
+		stash = malloc(1);
+	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!buffer)
+		return (NULL);
+	i_read = 1;
+	while (i_read != 0)
 	{
-		dst[i] = src[i];
+		i_read = read(fd, buffer, BUFFER_SIZE);
+		if (i_read < 0)
+		{
+			free(buffer);
+			return (NULL);
+		}
+		buffer[i_read] = '\0';
+		stash = gnl_free_join(stash, buffer);
+		if (gnl_strchr(buffer, '\n') == 1)
+			return (stash);
+	}
+	free(buffer);
+	return (stash);
+}
+
+char	*gnl_line(char *stash)
+{
+	char	*line;
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	i = 0;
+	while (stash[len] && stash[len] != '\n')
+		len++;
+	line = malloc(sizeof(char) * len + 1);
+	while (len - i > 0)
+	{
+		line[i] = stash[i];
 		i++;
 	}
-	return (dst);
+	if (stash[i] == '\n')
+		line[i] = '\n';
+	line[i] = '\0';
+	return (line);
+}
+
+char	*gnl_next(char *stash)
+{
+	char	*next_line;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	while (stash[i] && stash[i] != '\n')
+		i++;
+	if (stash[i] == '\0')
+		return (free(stash), NULL);
+	next_line = malloc(sizeof(char) * (ft_strlen(stash) - i) + 1);
+	if (!next_line)
+		return (NULL);
+	while (stash[i + j])
+	{
+		next_line[j] = stash[i + j];
+		j++;
+	}
+	next_line[j] = '\0';
+	free(stash);
+	return (next_line);
 }
 
 /**
@@ -67,34 +151,23 @@ char	*gnl_strcpy(const char *src)
 char	*get_next_line(int fd)
 {
 	static char	*stash;
-	char		*buffer;
-	int			we;
+	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 0)
+	if (fd < 0 || BUFFER_SIZE < 0 || read(1, 0, 0) < 0)
 		return (NULL);
-	buffer = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buffer)
-		return (NULL);
-	we = 1;
-	while (we != 0)
-	{
-		we = read(fd, buffer, BUFFER_SIZE);
-		printf("%s", buffer);
-		// if (gnl_strchr(buffer, '\n') == 1)
-		// 	return (stash);
-	}
-	// while (gnl_strchr(buffer, '\n') == 0)
-	// {
-		// read(fd, buffer, BUFFER_SIZE);
-		// printf("%s\n", buffer);
-	// }
-	return (stash);
+	stash = gnl_read_line(fd, stash);
+	printf("stash = %s\n", stash);
+	line = gnl_line(stash);
+	printf("line = %s\n", line);
+	stash = gnl_next(stash);
+	printf("next_line = %s\n", stash);
+	return (line);
 }
 
 int	main(void)
 {
 	int fd = open("file_test", O_RDONLY);
-	get_next_line(fd);
-	// get_next_line(fd);
+	printf("real : %s\n", get_next_line(fd));
+	printf("real : %s\n", get_next_line(fd));
 	return (0);
 }
