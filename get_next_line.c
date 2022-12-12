@@ -6,11 +6,14 @@
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 18:09:42 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/12 13:28:30 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/12 16:16:59 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <limits.h>
+#include <fcntl.h>
+#include <stdio.h>
 
 char	*gnl_free_join(char *stash, char *buffer)
 {
