@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/08 18:09:42 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/12 13:28:30 by thmeyer          ###   ########.fr       */
+/*   Created: 2022/12/12 13:28:43 by thmeyer           #+#    #+#             */
+/*   Updated: 2022/12/12 15:12:36 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*gnl_free_join(char *stash, char *buffer)
 {
@@ -106,13 +106,13 @@ char	*gnl_next(char *stash)
  */
 char	*get_next_line(int fd)
 {
-	static char	*stash;
+	static char	*stash[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) != 0)
-		return (free(stash), stash = NULL, NULL);
-	stash = gnl_read_line(fd, stash);
-	line = gnl_line(stash);
-	stash = gnl_next(stash);
+	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE < 1 || read(fd, 0, 0) != 0)
+		return (free(stash[fd]), stash[fd] = NULL, NULL);
+	stash[fd] = gnl_read_line(fd, stash[fd]);
+	line = gnl_line(stash[fd]);
+	stash[fd] = gnl_next(stash[fd]);
 	return (line);
 }
