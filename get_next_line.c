@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <limits.h>
-#include <fcntl.h>
-#include <stdio.h>
 
 char	*gnl_free_join(char *stash, char *buffer)
 {
