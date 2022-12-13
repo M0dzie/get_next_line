@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: thmeyer <marvin42@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 18:09:42 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/12 16:16:59 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/13 14:05:03 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ char	*gnl_free_join(char *stash, char *buffer)
 	char	*next;
 
 	next = gnl_strjoin(stash, buffer);
-	return (free(stash), next);
+	return (free(stash), stash = NULL, next);
 }
 
 char	*gnl_read_line(int fd, char *stash)
 {
-	char	*buffer;
+	char	buffer[BUFFER_SIZE + 1];
 	int		i_read;
 
 	if (!stash)
@@ -30,21 +30,18 @@ char	*gnl_read_line(int fd, char *stash)
 		stash = malloc(1);
 		stash[0] = '\0';
 	}
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
 	i_read = 1;
 	while (i_read != 0)
 	{
 		i_read = read(fd, buffer, BUFFER_SIZE);
 		if (i_read < 0)
-			return (free(buffer), NULL);
+			return (NULL);
 		buffer[i_read] = '\0';
 		stash = gnl_free_join(stash, buffer);
 		if (gnl_strchr(buffer, '\n') == 1)
 			break ;
 	}
-	return (free(buffer), stash);
+	return (stash);
 }
 
 char	*gnl_line(char *stash)
@@ -59,7 +56,9 @@ char	*gnl_line(char *stash)
 		return (NULL);
 	while (stash[len] && stash[len] != '\n')
 		len++;
-	line = malloc(sizeof(char) * (len + 2));
+	if (stash[len] == '\n')
+		len++;
+	line = malloc(sizeof(char) * (len + 1));
 	if (!line)
 		return (NULL);
 	while (len - i > 0)
@@ -67,8 +66,6 @@ char	*gnl_line(char *stash)
 		line[i] = stash[i];
 		i++;
 	}
-	if (stash[i] == '\n')
-		line[i++] = '\n';
 	line[i] = '\0';
 	return (line);
 }
@@ -84,7 +81,7 @@ char	*gnl_next(char *stash)
 	while (stash[i] && stash[i] != '\n')
 		i++;
 	if (stash[i] == '\0')
-		return (free(stash), NULL);
+		return (free(stash), stash = NULL, NULL);
 	next_line = malloc(sizeof(char) * ((ft_strlen(stash) - i) + 1));
 	if (!next_line)
 		return (NULL);
@@ -95,7 +92,7 @@ char	*gnl_next(char *stash)
 		j++;
 	}
 	next_line[j] = '\0';
-	return (free(stash), next_line);
+	return (free(stash), stash = NULL, next_line);
 }
 
 /**
@@ -109,7 +106,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) != 0)
+	if (fd < 0 || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
 		return (free(stash), stash = NULL, NULL);
 	stash = gnl_read_line(fd, stash);
 	line = gnl_line(stash);
