@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thmeyer <marvin42@42.fr>                   +#+  +:+       +#+        */
+/*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:55:35 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/15 12:47:02 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/20 08:59:32 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,5 @@ char	*gnl_strjoin(char *stash, char *buffer);
 int		gnl_strchr(const char *s, char c);
 
 size_t	ft_strlen(const char *s);
+
 #endif

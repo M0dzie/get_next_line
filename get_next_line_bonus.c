@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thmeyer <marvin42@42.fr>                   +#+  +:+       +#+        */
+/*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 13:28:43 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/15 13:40:59 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/20 08:58:23 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*gnl_free_join(char *stash, char *buffer)
 	char	*next;
 
 	next = gnl_strjoin(stash, buffer);
-	free(stash);
+	free (stash);
 	stash = NULL;
 	return (next);
 }
@@ -112,7 +112,7 @@ char	*get_next_line(int fd)
 	static char	*stash[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE < 1 || read(fd, 0, 0) < 0)
+	if (fd < 0 || fd > OPEN_MAX || BUFFER_SIZE < 1 || read(fd, 0, 0) != 0)
 		return (free(stash[fd]), stash[fd] = NULL, NULL);
 	stash[fd] = gnl_read_line(fd, stash[fd]);
 	if (!stash[fd])

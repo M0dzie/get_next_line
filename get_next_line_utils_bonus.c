@@ -6,7 +6,7 @@
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/12 13:31:52 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/12 15:59:39 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/20 09:53:55 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*gnl_strjoin(char *stash, char *buffer)
 
 	i = 0;
 	j = 0;
+	if (!stash || !buffer)
+		return (NULL);
 	join = malloc(sizeof(char) * ((ft_strlen(stash) + ft_strlen(buffer)) + 1));
 	if (!join)
 		return (NULL);

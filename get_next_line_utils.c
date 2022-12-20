@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: thmeyer <marvin42@42.fr>                   +#+  +:+       +#+        */
+/*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 15:07:45 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/15 12:47:07 by thmeyer          ###   ########.fr       */
+/*   Updated: 2022/12/20 09:54:00 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ char	*gnl_strjoin(char *stash, char *buffer)
 
 	i = 0;
 	j = 0;
+	if (!stash || !buffer)
+		return (NULL);
 	join = malloc(sizeof(char) * ((ft_strlen(stash) + ft_strlen(buffer)) + 1));
 	if (!join)
 		return (NULL);
