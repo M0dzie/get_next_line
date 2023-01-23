@@ -6,7 +6,7 @@
 /*   By: thmeyer <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/01 15:55:35 by thmeyer           #+#    #+#             */
-/*   Updated: 2022/12/20 08:59:32 by thmeyer          ###   ########.fr       */
+/*   Updated: 2023/01/05 13:21:44 by thmeyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 15
 # endif
 
 char	*gnl_free_join(char *stash, char *buffer);
