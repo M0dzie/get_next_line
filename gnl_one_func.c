@@ -32,7 +32,7 @@ char	*get_next_line(int fd)
 	int	i = 0;
 	int	rd;
 
-	rd = read(fd, &buffer, 1);
+	rd = read(fd, &buffer, BUFFER_SIZE/BUFFER_SIZE);
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || rd == 0)
 		return (NULL);
 	while (rd)
@@ -41,7 +41,7 @@ char	*get_next_line(int fd)
 		if (buffer == '\n')
 			break ;
 		else
-			rd = read(fd, &buffer, 1);
+			rd = read(fd, &buffer, BUFFER_SIZE/BUFFER_SIZE);
 	}
 	line[i++] = '\0';
 	char	*s;
