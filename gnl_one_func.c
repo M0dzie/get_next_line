@@ -43,7 +43,7 @@ char	*get_next_line(int fd)
 		else
 			rd = read(fd, &buffer, BUFFER_SIZE/BUFFER_SIZE);
 	}
-	line[i++] = '\0';
+	line[i] = '\0';
 	char	*s;
 	int	len = ft_strlen(line);
 	s = malloc(sizeof(char) * len + 1);
