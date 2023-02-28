@@ -32,18 +32,20 @@ char	*get_next_line(int fd)
 	int	i = 0;
 	int	rd;
 
-	rd = read(fd, &buffer, 1);
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0 || rd == 0)
-		return (NULL);
+   	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
+        	return (NULL);
+    	rd = read(fd, &buffer, BUFFER_SIZE/BUFFER_SIZE);
+    	if (rd == 0)
+        	return (NULL);
 	while (rd)
 	{
 		line[i++] = buffer;
 		if (buffer == '\n')
-			break ;
+			rd = 0;
 		else
-			rd = read(fd, &buffer, 1);
+			rd = read(fd, &buffer, BUFFER_SIZE/BUFFER_SIZE);
 	}
-	line[i++] = '\0';
+	line[i] = '\0';
 	char	*s;
 	int	len = ft_strlen(line);
 	s = malloc(sizeof(char) * len + 1);
