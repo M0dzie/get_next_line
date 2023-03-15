@@ -34,7 +34,7 @@ char	*ft_strjoin(char *stash, char *buffer)
 	size = ft_strlen(stash) + ft_strlen(buffer);
 	join = malloc(sizeof(char) * (size + 1));
 	if (!join)
-		return (NULL);
+		return (free(stash), NULL);
 	if (stash)
 	{
 		while (stash[i])
@@ -109,14 +109,14 @@ int	find_endl(char *line)
 
 char	*get_next_line(int fd)
 {
-	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
 	char buffer[BUFFER_SIZE + 1];
 	buffer[0] = '\0';
 	static char *stash;
 	char *line;
 	int rd = 1;
 
+	if (fd < 0 || read(fd, NULL, 0) < 0 || BUFFER_SIZE <= 0)
+		return (free(stash), NULL);
 	while (rd != 0)
 	{
 		if ((rd = read(fd, buffer, BUFFER_SIZE)) == -1)
